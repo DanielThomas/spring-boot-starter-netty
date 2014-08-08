@@ -1,0 +1,60 @@
+/*
+ * Copyright 2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+version '1.0-SNAPSHOT'
+description 'Spring Boot Netty Starter'
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'com.github.ben-manes.versions'
+
+apply from: 'gradle/dependencies.gradle'
+apply from: 'gradle/idea.gradle'
+apply from: 'gradle/maven.gradle'
+apply from: 'gradle/test.gradle'
+
+dependencies {
+  compile libraries.guava
+  compile libraries.netty
+  compile libraries.servletapi
+  compile libraries.springboot
+
+  testCompile libraries.testlibs
+}
+
+jar {
+  manifest {
+    attributes('Implementation-Title': description, 'Implementation-Version': version)
+  }
+}
+
+task wrapper(type: Wrapper) { gradleVersion = '2.0' }
+
+repositories {
+  mavenCentral()
+}
+
+buildscript {
+  repositories {
+    jcenter()
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.5-beta-6'
+  }
+}
