@@ -79,3 +79,15 @@ And to serving the response directly from Netty:
         Req/Sec    27.21k     4.26k   41.44k    66.08%
       6164886 requests in 2.00m, 223.41MB read
     Requests/sec:  51374.16
+
+Prototype Netty 4.1 Beta 3 Bridge (Commit eb531c6)
+-------------
+
+    Running 2m test @ http://localhost:8080/plaintext
+      2 threads and 32 connections
+      Thread Stats   Avg      Stdev     Max   +/- Stdev
+        Latency     1.95ms   18.62ms 289.53ms   99.57%
+        Req/Sec    20.48k     2.55k   37.78k    86.51%
+      4637061 requests in 2.00m, 698.71MB read
+    Requests/sec:  38642.24
+    Transfer/sec:      5.82MB
