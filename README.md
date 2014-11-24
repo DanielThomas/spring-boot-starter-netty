@@ -1,6 +1,6 @@
 A prototype Netty embedded servlet bridge for Spring Boot.
 
-Includes basic filter and servlet support. I'm fairly new to Spring Boot, but this approach seems to fit it's opionated view of the servlet container. Async servlet support isn't yet completed.
+Includes basic filter and servlet support. I'm fairly new to Spring Boot, but this approach seems to fit it's opinionated view of the servlet container. Async servlet support isn't yet completed.
 
 Performance
 =============
