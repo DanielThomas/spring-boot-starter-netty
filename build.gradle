@@ -42,7 +42,7 @@ jar {
   }
 }
 
-task wrapper(type: Wrapper) { gradleVersion = '2.0' }
+task wrapper(type: Wrapper) { gradleVersion = '2.2' }
 
 repositories {
   mavenCentral()
@@ -55,6 +55,6 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.5-beta-6'
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.5'
   }
 }

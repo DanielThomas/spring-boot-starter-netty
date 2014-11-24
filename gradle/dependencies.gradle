@@ -20,9 +20,9 @@ ext {
   versions = [:]
 }
 
-versions.guava = '17.0'
+versions.guava = '18.0'
 versions.spock = '0.7-groovy-2.0'
-versions.springboot = '1.1.5.RELEASE'
+versions.springboot = '1.1.9.RELEASE'
 
 configurations.all {
   resolutionStrategy {
@@ -59,7 +59,7 @@ libraries.guava = [
     'com.google.code.findbugs:jsr305:3.0.0'
 ]
 libraries.netty = [
-    'io.netty:netty-all:4.1.0.Beta1',
+    'io.netty:netty-all:4.1.0.Beta3',
     'org.javassist:javassist:3.18.2-GA',
     'com.jcraft:jzlib:1.1.3'
 ]

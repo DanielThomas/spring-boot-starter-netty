@@ -7,7 +7,7 @@ Performance
 
 Use the `runTestApp` Gradle task to start the server with the same configuration used here. Tests run with `wrk` with the following arguments:
 
-    wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 120 -c 32 -t 2 http://localhost:8080 plaintext
+    wrk -H 'Host: localhost' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Connection: keep-alive' -d 120 -c 32 -t 2 http://localhost:8080/plaintext
 
 Tomcat 7.0.55
 -------------
