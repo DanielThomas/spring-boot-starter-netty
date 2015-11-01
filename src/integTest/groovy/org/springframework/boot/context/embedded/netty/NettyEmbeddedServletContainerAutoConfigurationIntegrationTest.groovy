@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2014 the original author or authors.
  *
@@ -24,12 +23,12 @@ import org.springframework.context.ConfigurableApplicationContext
 import spock.lang.Specification
 
 class NettyEmbeddedServletContainerAutoConfigurationIntegrationTest extends Specification {
-  def 'application autoconfigures netty factory'() {
-    given:
-    def String[] args = []
-    ConfigurableApplicationContext context = SpringApplication.run(TestApplication, args)
+    def 'application autoconfigures netty factory'() {
+        given:
+        def String[] args = []
+        ConfigurableApplicationContext context = SpringApplication.run(TestApplication, args)
 
-    expect:
-    context.getBean(EmbeddedServletContainerFactory) instanceof NettyEmbeddedServletContainerFactory
-  }
+        expect:
+        context.getBean(EmbeddedServletContainerFactory) instanceof NettyEmbeddedServletContainerFactory
+    }
 }

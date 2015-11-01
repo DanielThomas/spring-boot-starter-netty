@@ -33,39 +33,39 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class NettyHttpServletResponseBenchmark {
-  private NettyHttpServletResponse response;
+    private NettyHttpServletResponse response;
 
-  @Setup
-  public void setup() {
-    StubChannelHandlerContext cxt = new StubChannelHandlerContext();
-    HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, false);
-    NettyEmbeddedContext context = new NettyEmbeddedContext("/", Thread.currentThread().getContextClassLoader(), "Server");
-    response = new NettyHttpServletResponse(cxt, context, httpResponse);
-  }
+    @Setup
+    public void setup() {
+        StubChannelHandlerContext cxt = new StubChannelHandlerContext();
+        HttpResponse httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, false);
+        NettyEmbeddedContext context = new NettyEmbeddedContext("/", Thread.currentThread().getContextClassLoader(), "Server");
+        response = new NettyHttpServletResponse(cxt, context, httpResponse);
+    }
 
-  @Benchmark
-  public void setContentType() {
-    response.setContentType("text/html");
-  }
+    @Benchmark
+    public void setContentType() {
+        response.setContentType("text/html");
+    }
 
-  @Benchmark
-  public void setContentTypeHeader() {
-    response.setHeader(HttpHeaders.Names.CONTENT_TYPE, "text/html");
-  }
+    @Benchmark
+    public void setContentTypeHeader() {
+        response.setHeader(HttpHeaders.Names.CONTENT_TYPE, "text/html");
+    }
 
-  @Benchmark
-  public CharSequence getFormattedDate() {
-    return response.getFormattedDate();
-  }
+    @Benchmark
+    public CharSequence getFormattedDate() {
+        return response.getFormattedDate();
+    }
 
-  public static void main(String[] args) throws RunnerException {
-    Options opt = new OptionsBuilder()
-        .include(".*" + NettyHttpServletResponseBenchmark.class.getSimpleName() + ".*")
-        .warmupIterations(5)
-        .measurementIterations(5)
-        .forks(1)
-        .build();
+    public static void main(String[] args) throws RunnerException {
+        Options opt = new OptionsBuilder()
+                .include(".*" + NettyHttpServletResponseBenchmark.class.getSimpleName() + ".*")
+                .warmupIterations(5)
+                .measurementIterations(5)
+                .forks(1)
+                .build();
 
-    new Runner(opt).run();
-  }
+        new Runner(opt).run();
+    }
 }

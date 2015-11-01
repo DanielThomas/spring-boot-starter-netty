@@ -31,21 +31,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Danny Thomas
  */
 class NettyEmbeddedServletInitializer extends ChannelInitializer<SocketChannel> {
-  private final EventExecutorGroup servletExecutor;
-  private final RequestDispatcherHandler requestDispatcherHandler;
-  private final NettyEmbeddedContext servletContext;
+    private final EventExecutorGroup servletExecutor;
+    private final RequestDispatcherHandler requestDispatcherHandler;
+    private final NettyEmbeddedContext servletContext;
 
-  NettyEmbeddedServletInitializer(EventExecutorGroup servletExecutor, NettyEmbeddedContext servletContext) {
-    this.servletContext = servletContext;
-    this.servletExecutor = checkNotNull(servletExecutor);
-    requestDispatcherHandler = new RequestDispatcherHandler(servletContext);
-  }
+    NettyEmbeddedServletInitializer(EventExecutorGroup servletExecutor, NettyEmbeddedContext servletContext) {
+        this.servletContext = servletContext;
+        this.servletExecutor = checkNotNull(servletExecutor);
+        requestDispatcherHandler = new RequestDispatcherHandler(servletContext);
+    }
 
-  @Override
-  protected void initChannel(SocketChannel ch) throws Exception {
-    ChannelPipeline p = ch.pipeline();
-    p.addLast("codec", new HttpServerCodec(4096, 8192, 8192, false));
-    p.addLast("servletInput", new ServletContentHandler(servletContext));
-    p.addLast(servletExecutor, "filterChain", requestDispatcherHandler);
-  }
+    @Override
+    protected void initChannel(SocketChannel ch) throws Exception {
+        ChannelPipeline p = ch.pipeline();
+        p.addLast("codec", new HttpServerCodec(4096, 8192, 8192, false));
+        p.addLast("servletInput", new ServletContentHandler(servletContext));
+        p.addLast(servletExecutor, "filterChain", requestDispatcherHandler);
+    }
 }

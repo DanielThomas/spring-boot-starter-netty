@@ -35,38 +35,38 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Group)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class HttpContentInputStreamBenchmark {
-  private HttpContentInputStream stream;
-  private byte[] b;
+    private HttpContentInputStream stream;
+    private byte[] b;
 
-  @Param("8192")
-  private int size;
+    @Param("8192")
+    private int size;
 
-  @Setup
-  public void setup() {
-    stream = new HttpContentInputStream(new EmbeddedChannel());
-    b = new byte[size];
-  }
+    @Setup
+    public void setup() {
+        stream = new HttpContentInputStream(new EmbeddedChannel());
+        b = new byte[size];
+    }
 
-  @Benchmark
-  @Group("handler")
-  public void addContent() {
-    stream.addContent(new DefaultHttpContent(Unpooled.buffer(size)));
-  }
+    @Benchmark
+    @Group("handler")
+    public void addContent() {
+        stream.addContent(new DefaultHttpContent(Unpooled.buffer(size)));
+    }
 
-  @Benchmark
-  @Group("handler")
-  public int read() throws IOException {
-    return stream.read(b);
-  }
+    @Benchmark
+    @Group("handler")
+    public int read() throws IOException {
+        return stream.read(b);
+    }
 
-  public static void main(String[] args) throws RunnerException {
-    Options opt = new OptionsBuilder()
-        .include(".*" + HttpContentInputStream.class.getSimpleName() + ".*")
-        .warmupIterations(5)
-        .measurementIterations(5)
-        .forks(0)
-        .build();
+    public static void main(String[] args) throws RunnerException {
+        Options opt = new OptionsBuilder()
+                .include(".*" + HttpContentInputStream.class.getSimpleName() + ".*")
+                .warmupIterations(5)
+                .measurementIterations(5)
+                .forks(0)
+                .build();
 
-    new Runner(opt).run();
-  }
+        new Runner(opt).run();
+    }
 }

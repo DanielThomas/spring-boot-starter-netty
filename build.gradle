@@ -15,12 +15,14 @@
  *
  */
 
+plugins {
+    id 'java'
+    id 'groovy'
+    id 'com.github.ben-manes.versions' version '0.11.3'
+}
+
 version '1.0-SNAPSHOT'
 description 'Spring Boot Netty Starter'
-
-apply plugin: 'java'
-apply plugin: 'groovy'
-apply plugin: 'com.github.ben-manes.versions'
 
 apply from: 'gradle/dependencies.gradle'
 apply from: 'gradle/idea.gradle'
@@ -28,33 +30,22 @@ apply from: 'gradle/maven.gradle'
 apply from: 'gradle/test.gradle'
 
 dependencies {
-  compile libraries.guava
-  compile libraries.netty
-  compile libraries.servletapi
-  compile libraries.springboot
+    compile libraries.guava
+    compile libraries.netty
+    compile libraries.servletapi
+    compile libraries.springboot
 
-  testCompile libraries.testlibs
+    testCompile libraries.testlibs
 }
 
 jar {
-  manifest {
-    attributes('Implementation-Title': description, 'Implementation-Version': version)
-  }
+    manifest {
+        attributes('Implementation-Title': description, 'Implementation-Version': version)
+    }
 }
 
-task wrapper(type: Wrapper) { gradleVersion = '2.2' }
+task wrapper(type: Wrapper) { gradleVersion = '2.8' }
 
 repositories {
-  mavenCentral()
-}
-
-buildscript {
-  repositories {
     jcenter()
-    mavenCentral()
-  }
-
-  dependencies {
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.5'
-  }
 }

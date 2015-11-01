@@ -21,22 +21,22 @@ apply from: 'gradle/integTest.gradle'
 apply from: 'gradle/benchmark.gradle'
 
 task('checkSourceFiles') << {
-  def sourceSet = sourceSets.main.java
-  for(File srcDir : sourceSet.srcDirs) {
-    def tree = fileTree(srcDir).matching(sourceSet.filter)
-    def packageDirs = new TreeSet<File>()
-    tree.visit { details ->
-      if (!details.isDirectory()) {
-        packageDirs.add(details.getFile().getParentFile())
-      }
-    }
-    for (File packageDir : packageDirs) {
-      def packageInfoFile = new File(packageDir, 'package-info.java')
-      assert packageInfoFile.exists() : packageInfoFile.absolutePath + ' is missing. All packages must have a package-info file'
+    def sourceSet = sourceSets.main.java
+    for (File srcDir : sourceSet.srcDirs) {
+        def tree = fileTree(srcDir).matching(sourceSet.filter)
+        def packageDirs = new TreeSet<File>()
+        tree.visit { details ->
+            if (!details.isDirectory()) {
+                packageDirs.add(details.getFile().getParentFile())
+            }
+        }
+        for (File packageDir : packageDirs) {
+            def packageInfoFile = new File(packageDir, 'package-info.java')
+            assert packageInfoFile.exists(): packageInfoFile.absolutePath + ' is missing. All packages must have a package-info file'
 
-      def sanityTestFile = new File(packageDir.absolutePath.replace('\\', '/').replace('src/main/java', 'src/test/groovy'), 'PackageSanityTest.groovy')
-      assert sanityTestFile.exists() : sanityTestFile.absolutePath + ' is missing. All packages must have a Guava package sanity check'
+            def sanityTestFile = new File(packageDir.absolutePath.replace('\\', '/').replace('src/main/java', 'src/test/groovy'), 'PackageSanityTest.groovy')
+            assert sanityTestFile.exists(): sanityTestFile.absolutePath + ' is missing. All packages must have a Guava package sanity check'
+        }
     }
-  }
 }
 compileJava.dependsOn checkSourceFiles

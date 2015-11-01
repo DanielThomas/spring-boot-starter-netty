@@ -28,16 +28,17 @@ import javax.annotation.Nullable
 /**
  * Sanity tests for {@link org.springframework.boot.context.embedded.netty}.
  */
-@Ignore // FIXME I've added a bunch of new classes that can't be instantiated automatically, that'll I'll need to add back here
+@Ignore
+// FIXME I've added a bunch of new classes that can't be instantiated automatically, that'll I'll need to add back here
 class PackageSanityTest extends AbstractPackageSanityTests {
-  PackageSanityTest() {
-    setDefault(ByteBuf, Unpooled.buffer())
-    setDefault(NettyEmbeddedContext, new NettyEmbeddedContext("/", Thread.currentThread().getContextClassLoader(), "ServerInfo"))
-    ignoreClasses(new Predicate<Class<?>>() {
-      @Override
-      boolean apply(@Nullable Class<?> input) {
-        input == AbstractNettyRegistration
-      }
-    })
-  }
+    PackageSanityTest() {
+        setDefault(ByteBuf, Unpooled.buffer())
+        setDefault(NettyEmbeddedContext, new NettyEmbeddedContext("/", Thread.currentThread().getContextClassLoader(), "ServerInfo"))
+        ignoreClasses(new Predicate<Class<?>>() {
+            @Override
+            boolean apply(@Nullable Class<?> input) {
+                input == AbstractNettyRegistration
+            }
+        })
+    }
 }

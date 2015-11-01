@@ -40,13 +40,13 @@ import org.springframework.core.annotation.Order;
 @ConditionalOnWebApplication
 @Import(EmbeddedServletContainerCustomizerBeanPostProcessorRegistrar.class)
 public class NettyEmbeddedServletContainerAutoConfiguration {
-  @Configuration
-  @ConditionalOnClass({Bootstrap.class})
-  @ConditionalOnMissingBean(value = EmbeddedServletContainerFactory.class, search = SearchStrategy.CURRENT)
-  public static class EmbeddedNetty {
-    @Bean
-    public NettyEmbeddedServletContainerFactory nettyEmbeddedServletContainerFactory() {
-      return new NettyEmbeddedServletContainerFactory();
+    @Configuration
+    @ConditionalOnClass({Bootstrap.class})
+    @ConditionalOnMissingBean(value = EmbeddedServletContainerFactory.class, search = SearchStrategy.CURRENT)
+    public static class EmbeddedNetty {
+        @Bean
+        public NettyEmbeddedServletContainerFactory nettyEmbeddedServletContainerFactory() {
+            return new NettyEmbeddedServletContainerFactory();
+        }
     }
-  }
 }

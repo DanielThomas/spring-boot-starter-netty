@@ -39,86 +39,86 @@ import java.net.InetSocketAddress;
  * An {@link EmbeddedServletContainer} used to control an embedded Netty instance, that bridges to
  * {@link javax.servlet.http.HttpServletRequest} and from {@link javax.servlet.http.HttpServletResponse}
  * to Netty HTTP codec {@link io.netty.handler.codec.http.HttpMessage}s.
- * <p/>
+ * <p>
  * This is a minimal Servlet 3.1 implementation to provide for the opinionated embedded servlet container model for
  * Spring Boot, supporting a single context, runtime {@link javax.servlet.Registration} only, and no default or JSP
  * servlets.
- * <p/>
+ * <p>
  * This class should be created using the {@link NettyEmbeddedServletContainerFactory}.
  *
  * @author Danny Thomas
  */
 public class NettyEmbeddedServletContainer implements EmbeddedServletContainer {
-  private final Log logger = LogFactory.getLog(getClass());
-  private final InetSocketAddress address;
-  private final NettyEmbeddedContext context;
+    private final Log logger = LogFactory.getLog(getClass());
+    private final InetSocketAddress address;
+    private final NettyEmbeddedContext context;
 
-  private EventLoopGroup bossGroup;
-  private EventLoopGroup workerGroup;
-  private DefaultEventExecutorGroup servletExecutor;
+    private EventLoopGroup bossGroup;
+    private EventLoopGroup workerGroup;
+    private DefaultEventExecutorGroup servletExecutor;
 
-  public NettyEmbeddedServletContainer(InetSocketAddress address, NettyEmbeddedContext context) {
-    this.address = address;
-    this.context = context;
-  }
-
-  @Override
-  public void start() throws EmbeddedServletContainerException {
-    ServerBootstrap b = new ServerBootstrap();
-    groups(b);
-    servletExecutor = new DefaultEventExecutorGroup(50);
-    b.childHandler(new NettyEmbeddedServletInitializer(servletExecutor, context));
-
-    // Don't yet need the complexity of lifecycle state, listeners etc, so tell the context it's initialised here
-    context.setInitialised(true);
-
-    ChannelFuture future = b.bind(address).awaitUninterruptibly();
-    //noinspection ThrowableResultOfMethodCallIgnored
-    Throwable cause = future.cause();
-    if (null != cause) {
-      throw new EmbeddedServletContainerException("Could not start Netty server", cause);
+    public NettyEmbeddedServletContainer(InetSocketAddress address, NettyEmbeddedContext context) {
+        this.address = address;
+        this.context = context;
     }
-    logger.info(context.getServerInfo() + " started on port: " + getPort());
-  }
 
-  private void groups(ServerBootstrap b) {
-    if (StandardSystemProperty.OS_NAME.value().equals("Linux")) {
-      bossGroup = new EpollEventLoopGroup(1);
-      workerGroup = new EpollEventLoopGroup();
-      b.channel(EpollServerSocketChannel.class)
-          .group(bossGroup, workerGroup)
-          .option(EpollChannelOption.TCP_CORK, true);
-    } else {
-      bossGroup = new NioEventLoopGroup(1);
-      workerGroup = new NioEventLoopGroup();
-      b.channel(NioServerSocketChannel.class)
-          .group(bossGroup, workerGroup);
+    @Override
+    public void start() throws EmbeddedServletContainerException {
+        ServerBootstrap b = new ServerBootstrap();
+        groups(b);
+        servletExecutor = new DefaultEventExecutorGroup(50);
+        b.childHandler(new NettyEmbeddedServletInitializer(servletExecutor, context));
+
+        // Don't yet need the complexity of lifecycle state, listeners etc, so tell the context it's initialised here
+        context.setInitialised(true);
+
+        ChannelFuture future = b.bind(address).awaitUninterruptibly();
+        //noinspection ThrowableResultOfMethodCallIgnored
+        Throwable cause = future.cause();
+        if (null != cause) {
+            throw new EmbeddedServletContainerException("Could not start Netty server", cause);
+        }
+        logger.info(context.getServerInfo() + " started on port: " + getPort());
     }
-    b.option(ChannelOption.TCP_NODELAY, true)
-        .option(ChannelOption.SO_REUSEADDR, true)
-        .option(ChannelOption.SO_BACKLOG, 100);
-    logger.info("Bootstrap configuration: " + b.toString());
-  }
 
-  @Override
-  public void stop() throws EmbeddedServletContainerException {
-    try {
-      if (null != bossGroup) {
-        bossGroup.shutdownGracefully().await();
-      }
-      if (null != workerGroup) {
-        workerGroup.shutdownGracefully().await();
-      }
-      if (null != servletExecutor) {
-        servletExecutor.shutdownGracefully().await();
-      }
-    } catch (InterruptedException e) {
-      throw new EmbeddedServletContainerException("Container stop interrupted", e);
+    private void groups(ServerBootstrap b) {
+        if (StandardSystemProperty.OS_NAME.value().equals("Linux")) {
+            bossGroup = new EpollEventLoopGroup(1);
+            workerGroup = new EpollEventLoopGroup();
+            b.channel(EpollServerSocketChannel.class)
+                    .group(bossGroup, workerGroup)
+                    .option(EpollChannelOption.TCP_CORK, true);
+        } else {
+            bossGroup = new NioEventLoopGroup(1);
+            workerGroup = new NioEventLoopGroup();
+            b.channel(NioServerSocketChannel.class)
+                    .group(bossGroup, workerGroup);
+        }
+        b.option(ChannelOption.TCP_NODELAY, true)
+                .option(ChannelOption.SO_REUSEADDR, true)
+                .option(ChannelOption.SO_BACKLOG, 100);
+        logger.info("Bootstrap configuration: " + b.toString());
     }
-  }
 
-  @Override
-  public int getPort() {
-    return address.getPort();
-  }
+    @Override
+    public void stop() throws EmbeddedServletContainerException {
+        try {
+            if (null != bossGroup) {
+                bossGroup.shutdownGracefully().await();
+            }
+            if (null != workerGroup) {
+                workerGroup.shutdownGracefully().await();
+            }
+            if (null != servletExecutor) {
+                servletExecutor.shutdownGracefully().await();
+            }
+        } catch (InterruptedException e) {
+            throw new EmbeddedServletContainerException("Container stop interrupted", e);
+        }
+    }
+
+    @Override
+    public int getPort() {
+        return address.getPort();
+    }
 }

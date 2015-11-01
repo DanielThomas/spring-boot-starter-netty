@@ -18,46 +18,46 @@
 apply plugin: 'idea'
 
 idea {
-  project {
-    jdkName = targetCompatibility
-    languageLevel = targetCompatibility
-    wildcards += 'logback.groovy'
+    project {
+        jdkName = targetCompatibility
+        languageLevel = targetCompatibility
+        wildcards += 'logback.groovy'
 
-    ipr {
-      withXml { provider ->
-        def node = provider.asNode()
+        ipr {
+            withXml { provider ->
+                def node = provider.asNode()
 
-        def codestyle = new XmlParser().parse(file('gradle/idea-codestyle.xml'))
-        node.append(codestyle)
+                def codestyle = new XmlParser().parse(file('gradle/idea-codestyle.xml'))
+                node.append(codestyle)
 
-        def inspections = new XmlParser().parse(file('gradle/idea-inspections.xml'))
-        node.append(inspections)
+                def inspections = new XmlParser().parse(file('gradle/idea-inspections.xml'))
+                node.append(inspections)
 
-        def entrypoints = new XmlParser().parse(file('gradle/idea-entrypoints.xml'))
-        node.append(entrypoints)
+                def entrypoints = new XmlParser().parse(file('gradle/idea-entrypoints.xml'))
+                node.append(entrypoints)
 
-        def compilerConfig = node.component.find { it.'@name' == 'CompilerConfiguration' }
-        compilerConfig.getByName('annotationProcessing').each { compilerConfig.remove(it) }
-        def annotationProcessing = compilerConfig.appendNode('annotationProcessing')
-        annotationProcessing.appendNode('profile', ['default': true, 'name': 'Default', 'enabled': true]).appendNode('processorPath', ['useClasspath': true])
+                def compilerConfig = node.component.find { it.'@name' == 'CompilerConfiguration' }
+                compilerConfig.getByName('annotationProcessing').each { compilerConfig.remove(it) }
+                def annotationProcessing = compilerConfig.appendNode('annotationProcessing')
+                annotationProcessing.appendNode('profile', ['default': true, 'name': 'Default', 'enabled': true]).appendNode('processorPath', ['useClasspath': true])
 
-        def copyrightManager = node.component.find { it.'@name' == 'CopyrightManager' }
-        node.remove(copyrightManager)
-        def copyright = new XmlParser().parse(file('gradle/idea-copyright.xml'))
-        node.append(copyright)
+                def copyrightManager = node.component.find { it.'@name' == 'CopyrightManager' }
+                node.remove(copyrightManager)
+                def copyright = new XmlParser().parse(file('gradle/idea-copyright.xml'))
+                node.append(copyright)
 
-        def vcsDirectoryMappings = node.component.find { it.'@name' == 'VcsDirectoryMappings' }
-        def mappings = vcsDirectoryMappings.iterator()
-        while (mappings.hasNext()) {
-          mappings.next()
-          mappings.remove()
+                def vcsDirectoryMappings = node.component.find { it.'@name' == 'VcsDirectoryMappings' }
+                def mappings = vcsDirectoryMappings.iterator()
+                while (mappings.hasNext()) {
+                    mappings.next()
+                    mappings.remove()
+                }
+
+                def gitRoot = file('.git')
+                if (gitRoot.exists()) {
+                    vcsDirectoryMappings.appendNode('mapping', ['directory': gitRoot.parentFile, 'vcs': 'Git'])
+                }
+            }
         }
-
-        def gitRoot = file('.git')
-        if (gitRoot.exists()) {
-          vcsDirectoryMappings.appendNode('mapping', ['directory': gitRoot.parentFile, 'vcs': 'Git'])
-        }
-      }
     }
-  }
 }

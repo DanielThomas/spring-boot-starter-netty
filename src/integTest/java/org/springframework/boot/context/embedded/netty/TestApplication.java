@@ -47,80 +47,80 @@ import java.util.concurrent.Callable;
 @ComponentScan
 @EnableWebMvc
 class TestApplication {
-  private static final String MESSAGE = "Hello, World!";
-  private static final Callable<String> MESSAGE_CALLABLE = new Callable<String>() {
-    @Override
-    public String call() throws Exception {
-      return MESSAGE;
-    }
-  };
+    private static final String MESSAGE = "Hello, World!";
+    private static final Callable<String> MESSAGE_CALLABLE = new Callable<String>() {
+        @Override
+        public String call() throws Exception {
+            return MESSAGE;
+        }
+    };
 
-  @RequestMapping(value = "/plaintext", produces = "text/plain")
-  @ResponseBody
-  public String plaintext() {
-    return MESSAGE;
-  }
-
-  @RequestMapping(value = "/async", produces = "text/plain")
-  @ResponseBody
-  public Callable<String> async() {
-    return MESSAGE_CALLABLE;
-  }
-
-  @RequestMapping(value = "/json", produces = "application/json")
-  @ResponseBody
-  public Message json() {
-    return new Message(MESSAGE);
-  }
-
-  @RequestMapping(value = "/upload", method = RequestMethod.POST)
-  @ResponseBody
-  public String upload(HttpServletRequest request) throws IOException {
-    ServletInputStream inputStream = request.getInputStream();
-    int total = 0;
-    while (true) {
-      byte[] bytes = new byte[8192];
-      int read = inputStream.read(bytes);
-      if (read == -1) {
-        break;
-      }
-      total += read;
-    }
-    return "Total bytes received: " + total;
-  }
-
-  @RequestMapping("/sleepy")
-  @ResponseBody
-  public String sleepy() throws InterruptedException {
-    int millis = 500;
-    Thread.sleep(millis);
-    return "Yawn! I slept for " + millis + "ms";
-  }
-
-  @Bean
-  public ServletRegistrationBean nullServletRegistration() {
-    return new ServletRegistrationBean(new NullHttpServlet(), "/null");
-  }
-
-  public static void main(String[] args) {
-    SpringApplication.run(TestApplication.class, args);
-  }
-
-  private static class Message {
-    private final String message;
-
-    public Message(String message) {
-      this.message = message;
+    @RequestMapping(value = "/plaintext", produces = "text/plain")
+    @ResponseBody
+    public String plaintext() {
+        return MESSAGE;
     }
 
-    public String getMessage() {
-      return message;
+    @RequestMapping(value = "/async", produces = "text/plain")
+    @ResponseBody
+    public Callable<String> async() {
+        return MESSAGE_CALLABLE;
     }
-  }
 
-  private class NullHttpServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    @RequestMapping(value = "/json", produces = "application/json")
+    @ResponseBody
+    public Message json() {
+        return new Message(MESSAGE);
     }
-  }
+
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @ResponseBody
+    public String upload(HttpServletRequest request) throws IOException {
+        ServletInputStream inputStream = request.getInputStream();
+        int total = 0;
+        while (true) {
+            byte[] bytes = new byte[8192];
+            int read = inputStream.read(bytes);
+            if (read == -1) {
+                break;
+            }
+            total += read;
+        }
+        return "Total bytes received: " + total;
+    }
+
+    @RequestMapping("/sleepy")
+    @ResponseBody
+    public String sleepy() throws InterruptedException {
+        int millis = 500;
+        Thread.sleep(millis);
+        return "Yawn! I slept for " + millis + "ms";
+    }
+
+    @Bean
+    public ServletRegistrationBean nullServletRegistration() {
+        return new ServletRegistrationBean(new NullHttpServlet(), "/null");
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(TestApplication.class, args);
+    }
+
+    private static class Message {
+        private final String message;
+
+        public Message(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
+
+    private class NullHttpServlet extends HttpServlet {
+        @Override
+        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        }
+    }
 }
